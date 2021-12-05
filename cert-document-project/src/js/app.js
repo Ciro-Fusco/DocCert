@@ -1,68 +1,131 @@
+
 App = {
   web3Provider: null,
   contracts: {},
 
   init: async function() {
-    // Load pets.
-    $.getJSON('../pets.json', function(data) {
-      var petsRow = $('#petsRow');
-      var petTemplate = $('#petTemplate');
-
-      for (i = 0; i < data.length; i ++) {
-        petTemplate.find('.panel-title').text(data[i].name);
-        petTemplate.find('img').attr('src', data[i].picture);
-        petTemplate.find('.pet-breed').text(data[i].breed);
-        petTemplate.find('.pet-age').text(data[i].age);
-        petTemplate.find('.pet-location').text(data[i].location);
-        petTemplate.find('.btn-adopt').attr('data-id', data[i].id);
-
-        petsRow.append(petTemplate.html());
-      }
-    });
-
     return await App.initWeb3();
   },
 
   initWeb3: async function() {
-    /*
-     * Replace me...
-     */
+    // Modern dapp browsers...
+  if (window.ethereum) {
+    App.web3Provider = window.ethereum;
+    try 
+    {
+      // Request account access
+      await window.ethereum.request({ method: "eth_requestAccounts" });
+    } 
+    catch (error) 
+    {
+    // User denied account access...
+    console.error("User denied account access")
+    }
+  }
+  // Legacy dapp browsers...
+  else if (window.web3) {
+    App.web3Provider = window.web3.currentProvider;
+  }
+  // If no injected web3 instance is detected, fall back to Ganache
+  else {
+    App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+  } 
+  web3 = new Web3(App.web3Provider);
 
     return App.initContract();
   },
 
+
   initContract: function() {
-    /*
-     * Replace me...
-     */
+    $.getJSON('DocCert.json', function(data) {
+      // Get the necessary contract artifact file and instantiate it with @truffle/contract
+      var DocCertArtifact = data;
+      App.contracts.DocCert = TruffleContract(DocCertArtifact);
+    
+      // Set the provider for our contract
+      App.contracts.DocCert.setProvider(App.web3Provider);
+    
+    });
 
     return App.bindEvents();
   },
 
   bindEvents: function() {
-    $(document).on('click', '.btn-adopt', App.handleAdopt);
+   
   },
 
-  markAdopted: function() {
-    /*
-     * Replace me...
-     */
+  handleInvioDoc: async function(event) {
+
+    var {cid,hash} = await invioDoc()
+
+    var docCertInstance;
+
+  web3.eth.getAccounts(function(error, accounts) {
+    if (error) {
+      console.log(error);
+  }
+
+  var account = accounts[0];
+
+  App.contracts.DocCert.deployed().then(function(instance) {
+    docCertInstance = instance;
+
+    return docCertInstance.addFile(hash.toString(),cid.path.toString(), {from: account});
+
+  }).then(function(result) {
+    document.getElementById("containerInfo").hidden=false;
+    document.getElementById("CidText").innerHTML="CID : "+ cid.path;
+    document.getElementById("hashText").innerHTML="Hash : "+ hash;
+  }).catch(function(err) {
+    console.log(err.message);
+  });
+});
   },
 
-  handleAdopt: function(event) {
-    event.preventDefault();
 
-    var petId = parseInt($(event.target).data('id'));
+  handleVerDoc: async function(event) {
+ 
 
-    /*
-     * Replace me...
-     */
+    var hash = await calcolaHashFile()
+
+    var docCertInstance;
+
+  web3.eth.getAccounts(function(error, accounts) {
+    if (error) {
+      console.log(error);
+  }
+
+  var account = accounts[0];
+
+  App.contracts.DocCert.deployed().then(function(instance) {
+    docCertInstance = instance;
+
+    return docCertInstance.verifica(hash, {from: account});
+
+  }).then(function(result) {
+      console.log(result)
+      document.getElementById("hashText").innerHTML = result
+      document.getElementById("addresText").innerHTML = result
+      document.getElementById("TimeStampText").innerHTML = result
+      document.getElementById("BlockNumberText").innerHTML = result
+  }).catch(function(err) {
+    console.log(err.message);
+  });
+});
+  },
+
+  handleAddProp: function(event) {
+    console.log("ciao")
+  },
+
+  handleGetCid: function(event) {
+    console.log("ciao")
   }
 
 };
 
 $(function() {
-  $(window).load(function() {
+  $(window).on("load",function() {
     App.init();
   });
 });

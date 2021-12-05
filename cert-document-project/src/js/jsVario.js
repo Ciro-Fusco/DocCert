@@ -19,17 +19,32 @@ drop_zone.ondragover = drop_zone.ondragenter = function(evt) {
     evt.preventDefault();
   };
   
- async function invioDoc()
+  async function invioDoc()
  {
     const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
     const cid = await node.add(fileInput.files[0]);
-    console.log(cid)
-    console.log(new TextDecoder("utf-8").decode(cid.cid.multihash.digest))
+    let hash= buf2hex(cid.cid.multihash.digest)
     if(cid!=null)
     {
       document.getElementById("containerInfo").hidden=false;
     document.getElementById("CidText").innerHTML="CID : "+ cid.path;
-    document.getElementById("hashText").innerHTML="Hash : "+ cid.cid.multihash;
+    document.getElementById("hashText").innerHTML="Hash : "+ hash;
     }
 
+    return {cid,hash}
+
  }
+
+function buf2hex(buffer) { // buffer is an ArrayBuffer
+  return [...new Uint8Array(buffer)]
+      .map(x => x.toString(16).padStart(2, '0'))
+      .join('');
+}
+
+ async function calcolaHashFile()
+{
+  const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
+  const cid = await node.add(fileInput.files[0],{onlyHash:true});
+  let hash= buf2hex(cid.cid.multihash.digest)
+  return hash;
+}

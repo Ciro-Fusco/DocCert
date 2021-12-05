@@ -16,29 +16,30 @@ contract DocCert {
 	
     AccessControl private ac;
     mapping(string => Record) private listCertFile;
+
+    constructor(){}
     
 
-    constructor(string memory hashFile, string memory cidFile)
+    function addFile(string memory hashFile, string memory cidFile) public  
     {
         require(!listCertFile[hashFile].exist);
 
         address[] memory addArray;
         addArray[0]=msg.sender;
+        
         Record memory r = Record (true,cidFile,addArray,block.timestamp,block.number);
         listCertFile[hashFile] = r;
-
         bytes32 hashRole = bytes32(bytes(hashFile));
         ac.grantRole(hashRole,msg.sender);
     }
 
-    function verifica(string memory hashFile) public view returns (Record memory)
+    function verifica(string memory hashFile) public view returns (string memory , address[] memory, uint , uint )
     {   
 
         require(listCertFile[hashFile].exist);
         Record memory r;
         r = listCertFile[hashFile];
-        Record memory r2 = Record (listCertFile[hashFile].exist,"",listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
-        return r2;
+        return ("",listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
     }
 
     function setOwner(string memory hashFile,address newAddress) public
