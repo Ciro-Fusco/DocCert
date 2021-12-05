@@ -1,3 +1,5 @@
+
+
 drop_zone.ondragover = drop_zone.ondragenter = function(evt) {
     evt.preventDefault();
   };
@@ -17,7 +19,17 @@ drop_zone.ondragover = drop_zone.ondragenter = function(evt) {
     evt.preventDefault();
   };
   
- function invioDoc()
+ async function invioDoc()
  {
-    console.log(fileInput.files);
+    const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
+    const cid = await node.add(fileInput.files[0]);
+    console.log(cid)
+    console.log(new TextDecoder("utf-8").decode(cid.cid.multihash.digest))
+    if(cid!=null)
+    {
+      document.getElementById("containerInfo").hidden=false;
+    document.getElementById("CidText").innerHTML="CID : "+ cid.path;
+    document.getElementById("hashText").innerHTML="Hash : "+ cid.cid.multihash;
+    }
+
  }

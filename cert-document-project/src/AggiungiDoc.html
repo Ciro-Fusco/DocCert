@@ -7,6 +7,11 @@
     <meta name="description" content="">
     <meta name="page_type" content="np-template-header-footer-from-plugin">
     <title>AggiungiDoc</title>
+    <!--IPFS-->
+    <script
+      src="js/ipfs.js"
+      defer
+    ></script>
     <link rel="stylesheet" href="css/nicepage.css" media="screen">
 <link rel="stylesheet" href="css/AggiungiDoc.css" media="screen">
     <script class="u-script" type="text/javascript" src="js/jquery.js" defer=""></script>
@@ -52,10 +57,10 @@
         <div class="u-align-left u-container-style u-group u-palette-1-base u-radius-50 u-shape-round u-group-1">
           <div class="u-container-layout u-container-layout-1">
             <p class="u-heading-font u-text u-text-default u-text-1">
-              <span style="font-size: 1.875rem;">Hash </span>:
+              <span id="hashText" style="font-size: 1.2rem;">Hash :</span>
             </p>
             <p class="u-heading-font u-text u-text-default u-text-2">
-              <span style="font-size: 1.875rem;">CID&nbsp;</span>:
+              <span id="CidText" style="font-size: 1.2rem;">CID :</span>
             </p>
           </div>
         </div>
