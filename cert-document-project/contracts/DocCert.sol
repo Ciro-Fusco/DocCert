@@ -27,7 +27,7 @@ contract DocCert {
         address[] memory addArray;
         addArray[0]=msg.sender;
         
-        Record memory r = Record (true,cidFile,addArray,block.timestamp,block.number);
+        Record storage r = Record (true,cidFile,addArray,block.timestamp,block.number); // storage al posto di memory perchè il record deve esistere al termine della chiamata
         listCertFile[hashFile] = r;
         bytes32 hashRole = bytes32(bytes(hashFile));
         ac.grantRole(hashRole,msg.sender);
