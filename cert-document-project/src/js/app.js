@@ -20,6 +20,7 @@ App = {
     {
     // User denied account access...
     console.error("User denied account access")
+    alert("Accesso all'account negato dall'utente")
     }
   }
   // Legacy dapp browsers...
@@ -63,6 +64,7 @@ App = {
   web3.eth.getAccounts(function(error, accounts) {
     if (error) {
       console.log(error);
+      alert("Non è stato possibile recuperare le informazioni sull'account");
   }
 
   var account = accounts[0];
@@ -78,6 +80,7 @@ App = {
     document.getElementById("hashText").innerHTML="Hash : "+ hash;
   }).catch(function(err) {
     console.log(err.message);
+    alert("Non è stato possibile aggiungere il documento all BlockChain.")
   });
 });
   },
@@ -94,6 +97,7 @@ App = {
   web3.eth.getAccounts(function(error, accounts) {
     if (error) {
       console.log(error);
+      alert("Non è stato possibile recuperare le informazioni sull'account");
   }
 
   var account = accounts[0];
@@ -119,6 +123,7 @@ App = {
       document.getElementById("BlockNumberText").innerHTML = "BlockNumber : "+result[3].c[0];
   }).catch(function(err) {
     console.log(err.message);
+    alert("Errore: "+err);
   });
 });
   },
@@ -135,6 +140,7 @@ App = {
       web3.eth.getAccounts(function(error, accounts) {
         if (error) {
           console.log(error);
+          alert("Non è stato possibile recuperare le informazioni sull'account");
       }
     
       var account = accounts[0];
@@ -148,12 +154,14 @@ App = {
           console.log(result)
       }).catch(function(err) {
         console.log(err.message);
+        alert("Non è stato possibile modificare le informazioni sul documento");
       });
     });
     }
     else
     {
       console.log("Address non valido")
+      alert("Indirizzo non valido");
     }
   },
 
@@ -167,6 +175,7 @@ App = {
   web3.eth.getAccounts(function(error, accounts) {
     if (error) {
       console.log(error);
+      alert("Non è stato possibile recuperare le informazioni sull'account");
   }
 
   var account = accounts[0];
@@ -182,6 +191,7 @@ App = {
     document.getElementById("cidText").innerHTML = "CID : " + result;
   }).catch(function(err) {
     console.log(err.message);
+    alert("Non è stato possibile ottenere il CID del documento");
   });
 });
   }
