@@ -24,12 +24,6 @@ drop_zone.ondragover = drop_zone.ondragenter = function(evt) {
     const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() })
     const cid = await node.add(fileInput.files[0]);
     let hash= buf2hex(cid.cid.multihash.digest)
-    if(cid!=null)
-    {
-      document.getElementById("containerInfo").hidden=false;
-    document.getElementById("CidText").innerHTML="CID : "+ cid.path;
-    document.getElementById("hashText").innerHTML="Hash : "+ hash;
-    }
 
     return {cid,hash}
 

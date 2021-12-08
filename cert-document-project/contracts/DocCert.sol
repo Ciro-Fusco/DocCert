@@ -4,7 +4,7 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-contract DocCert {
+contract DocCert is AccessControl{
 
     struct Record {
         bool exist;
@@ -13,47 +13,46 @@ contract DocCert {
         uint timestamp;
         uint blockNumber;
     }
-	
-    AccessControl private ac;
+
     mapping(string => Record) private listCertFile;
 
     constructor(){}
     
 
-    function addFile(string memory hashFile, string memory cidFile) public  
+    function addFile(string memory  hashFile, string memory cidFile) public
     {
-        require(!listCertFile[hashFile].exist);
+       require(!listCertFile[hashFile].exist);       
+    
+        listCertFile[hashFile].exist=true;
+        listCertFile[hashFile].cid=cidFile;
+        listCertFile[hashFile].owner.push(msg.sender);
+        listCertFile[hashFile].timestamp = block.timestamp;
+        listCertFile[hashFile].blockNumber = block.number;
 
-        address[] memory addArray;
-        addArray[0]=msg.sender;
-        
-        Record memory r = Record (true,cidFile,addArray,block.timestamp,block.number);
-        listCertFile[hashFile] = r;
+
         bytes32 hashRole = bytes32(bytes(hashFile));
-        ac.grantRole(hashRole,msg.sender);
+        _grantRole(hashRole,msg.sender);
     }
 
-    function verifica(string memory hashFile) public view returns (string memory , address[] memory, uint , uint )
+    function verifica(string memory  hashFile) public view  returns (string memory, address[] memory, uint, uint )
     {   
 
         require(listCertFile[hashFile].exist);
-        Record memory r;
-        r = listCertFile[hashFile];
         return ("",listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
     }
 
-    function setOwner(string memory hashFile,address newAddress) public
+    function setOwner(string memory   hashFile,address newAddress) public
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
-        require(ac.hasRole(hashRole,msg.sender));
+        require(hasRole(hashRole,msg.sender));
         listCertFile[hashFile].owner.push(newAddress);
-        ac.grantRole(hashRole,newAddress);
+        _grantRole(hashRole,newAddress);
     }
 
-    function getCid(string memory hashFile) public view  returns (string memory)
+    function getCid(string memory   hashFile) public view  returns (string memory)
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
-        require(ac.hasRole(hashRole,msg.sender));
+        require(hasRole(hashRole,msg.sender));
         return listCertFile[hashFile].cid;
     }
 

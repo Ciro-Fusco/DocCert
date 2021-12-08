@@ -31,7 +31,6 @@ App = {
     App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
   } 
   web3 = new Web3(App.web3Provider);
-
     return App.initContract();
   },
 
@@ -54,6 +53,7 @@ App = {
    
   },
 
+  //AGGIUNTA DOCUMENTO 
   handleInvioDoc: async function(event) {
 
     var {cid,hash} = await invioDoc()
@@ -83,6 +83,7 @@ App = {
   },
 
 
+  //VERIFICA DOCUMENTO
   handleVerDoc: async function(event) {
  
 
@@ -104,22 +105,85 @@ App = {
 
   }).then(function(result) {
       console.log(result)
-      document.getElementById("hashText").innerHTML = result
-      document.getElementById("addresText").innerHTML = result
-      document.getElementById("TimeStampText").innerHTML = result
-      document.getElementById("BlockNumberText").innerHTML = result
+      document.getElementById("containerInfo").hidden=false;
+      document.getElementById("hashText").innerHTML = "Hash : " + hash;
+      document.getElementById("addressText").innerHTML ="Address : " + result[1].toString().replaceAll(",","\n");
+
+      var date = new Date(result[2].c[0]*1000);
+      let hours = date.getHours();
+      let minutes = "0" + date.getMinutes();
+      let seconds = "0" + date.getSeconds();
+      let formattedTime =date.getDate()+"/"+date.getMonth()+ "/"+ date.getFullYear() + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) +" " ;
+
+      document.getElementById("TimeStampText").innerHTML ="TimeStamp : " + formattedTime;
+      document.getElementById("BlockNumberText").innerHTML = "BlockNumber : "+result[3].c[0];
   }).catch(function(err) {
     console.log(err.message);
   });
 });
   },
 
+
+  //AGGIUNTA PROPRIETARIO
   handleAddProp: function(event) {
-    console.log("ciao")
+    
+    let hash = document.getElementById("hashInput").value
+    let newAdress = document.getElementById("addressInput").value
+
+    if(/^0x[0-9a-f]{40}/.exec(newAdress.toLowerCase()))
+    {
+      web3.eth.getAccounts(function(error, accounts) {
+        if (error) {
+          console.log(error);
+      }
+    
+      var account = accounts[0];
+    
+      App.contracts.DocCert.deployed().then(function(instance) {
+        docCertInstance = instance;
+    
+        return docCertInstance.setOwner(hash,newAdress, {from: account});
+    
+      }).then(function(result) {
+          console.log(result)
+      }).catch(function(err) {
+        console.log(err.message);
+      });
+    });
+    }
+    else
+    {
+      console.log("Address non valido")
+    }
   },
 
+  //OTTIENI CID DOCUMENTO
   handleGetCid: function(event) {
-    console.log("ciao")
+
+    let hash = document.getElementById("hashInput").value
+
+    var docCertInstance;
+
+  web3.eth.getAccounts(function(error, accounts) {
+    if (error) {
+      console.log(error);
+  }
+
+  var account = accounts[0];
+
+  App.contracts.DocCert.deployed().then(function(instance) {
+    docCertInstance = instance;
+
+    return docCertInstance.getCid(hash, {from: account});
+
+  }).then(function(result) {
+    console.log(result)
+    document.getElementById("containerInfo").hidden=false;
+    document.getElementById("cidText").innerHTML = "CID : " + result;
+  }).catch(function(err) {
+    console.log(err.message);
+  });
+});
   }
 
 };
