@@ -18,12 +18,9 @@ contract TestDocCert{
  function testDocumentCanBeAdded() public {
    //Adding first owner to array
    expectedOwner.push(address(this));
-   
-   
+      
    doc.addFile(test_hash, test_cid);
 
-   //Assert.isTrue(super.listCertFile[test_hash].exist,"Contract return that document doesn't exists");
-   //Assert.equal(super.listCertFile[test_hash].cid, test_cid, "Document CID should be test_cid but is not.");
  }
  // Testing Verifica of a document
  function testVerifica() public {
@@ -36,8 +33,7 @@ contract TestDocCert{
  function testSetOwner() public {
    expectedOwner.push(address(0x00000000000000000002113400000000));
    doc.setOwner(test_hash,address(0x00000000000000000002113400000000));
-    
-   //Assert.equal(expectedOwner,super.listCertFile[test_hash].owner, "Owners of the document should be the same as defined here but are not");
+   
   }
   
   //Testing getCid of a Document
