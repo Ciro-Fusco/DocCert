@@ -21,7 +21,7 @@ contract DocCert is AccessControl{
 
     function addFile(string memory  hashFile, string memory cidFile) public
     {
-       require(!listCertFile[hashFile].exist);       
+       require(!listCertFile[hashFile].exist, "Documento già presente");       
     
         listCertFile[hashFile].exist=true;
         listCertFile[hashFile].cid=cidFile;
@@ -37,14 +37,14 @@ contract DocCert is AccessControl{
     function verifica(string memory  hashFile) public view  returns (string memory, address[] memory, uint, uint )
     {   
 
-        require(listCertFile[hashFile].exist);
+        require(listCertFile[hashFile].exist, "Documento inesistente");
         return ("",listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
     }
 
     function setOwner(string memory   hashFile,address newAddress) public
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
-        require(hasRole(hashRole,msg.sender));
+        require(hasRole(hashRole,msg.sender), "Utente non autorizzato");
         listCertFile[hashFile].owner.push(newAddress);
         _grantRole(hashRole,newAddress);
     }
@@ -52,7 +52,7 @@ contract DocCert is AccessControl{
     function getCid(string memory   hashFile) public view  returns (string memory)
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
-        require(hasRole(hashRole,msg.sender));
+        require(hasRole(hashRole,msg.sender), "Utente non autorizzato");
         return listCertFile[hashFile].cid;
     }
 
