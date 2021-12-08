@@ -123,7 +123,7 @@ App = {
       document.getElementById("BlockNumberText").innerHTML = "BlockNumber : "+result[3].c[0];
   }).catch(function(err) {
     console.log(err.message);
-    alert("Errore: "+err);
+    alert("Non è stato possibile verificare il documento");
   });
 });
   },
