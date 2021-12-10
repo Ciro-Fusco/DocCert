@@ -79,7 +79,7 @@ App = {
     document.getElementById("CidText").innerHTML="CID : "+ cid.path;
     document.getElementById("hashText").innerHTML="Hash : "+ hash;
   }).catch(function(err) {
-    console.log(err.message);
+    console.log(err);
     alert("Non è stato possibile aggiungere il documento all BlockChain.")
   });
 });
@@ -111,16 +111,16 @@ App = {
       console.log(result)
       document.getElementById("containerInfo").hidden=false;
       document.getElementById("hashText").innerHTML = "Hash : " + hash;
-      document.getElementById("addressText").innerHTML ="Address : " + result[1].toString().replaceAll(",","\n");
+      document.getElementById("addressText").innerHTML ="Address : " + result[0].toString().replaceAll(",","\n");
 
-      var date = new Date(result[2].c[0]*1000);
+      var date = new Date(result[1].c[0]*1000);
       let hours = date.getHours();
       let minutes = "0" + date.getMinutes();
       let seconds = "0" + date.getSeconds();
       let formattedTime =date.getDate()+"/"+date.getMonth()+ "/"+ date.getFullYear() + " " + hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2) +" " ;
 
       document.getElementById("TimeStampText").innerHTML ="TimeStamp : " + formattedTime;
-      document.getElementById("BlockNumberText").innerHTML = "BlockNumber : "+result[3].c[0];
+      document.getElementById("BlockNumberText").innerHTML = "BlockNumber : "+result[2].c[0];
   }).catch(function(err) {
     console.log(err.message);
     alert("Non è stato possibile verificare il documento");
