@@ -199,7 +199,7 @@ App = {
 };
 
 $(function() {
-  $(window).on("load",function() {
+  $(document).ready(function() {
     App.init();
   });
 });
