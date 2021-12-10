@@ -19,7 +19,7 @@ contract DocCert is AccessControl{
     constructor(){}
     
 
-    function addFile(string memory  hashFile, string memory cidFile) public
+    function addFile(string memory hashFile, string memory cidFile) public
     {
        require(!listCertFile[hashFile].exist, "Documento già presente");       
     
@@ -34,14 +34,14 @@ contract DocCert is AccessControl{
         _grantRole(hashRole,msg.sender);
     }
 
-    function verifica(string memory  hashFile) public view  returns (string memory, address[] memory, uint, uint )
+    function verifica(string memory hashFile) public view  returns (address[] memory, uint, uint )
     {   
 
         require(listCertFile[hashFile].exist, "Documento inesistente");
-        return ("",listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
+        return (listCertFile[hashFile].owner,listCertFile[hashFile].timestamp,listCertFile[hashFile].blockNumber);
     }
 
-    function setOwner(string memory   hashFile,address newAddress) public
+    function setOwner(string memory hashFile,address newAddress) public
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
         require(hasRole(hashRole,msg.sender), "Utente non autorizzato");
@@ -49,7 +49,7 @@ contract DocCert is AccessControl{
         _grantRole(hashRole,newAddress);
     }
 
-    function getCid(string memory   hashFile) public view  returns (string memory)
+    function getCid(string memory hashFile) public view  returns (string memory)
     {   
         bytes32 hashRole = bytes32(bytes(hashFile));
         require(hasRole(hashRole,msg.sender), "Utente non autorizzato");
