@@ -24,9 +24,8 @@ contract TestDocCert{
  }
  // Testing Verifica of a document
  function testVerifica() public {
-   (string memory s, address[] memory a, , ) = doc.verifica(test_hash);
+   (address[] memory a, , ) = doc.verifica(test_hash);
  
-   Assert.equal(s, "", "Cid returned should be \"\" but  is not!");
    Assert.equal(a, expectedOwner, "Owners should be equal but are not!");
     }
  // Testing setOwner of a Document

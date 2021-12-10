@@ -21,7 +21,7 @@ contract DocCert is AccessControl{
 
     function addFile(string memory hashFile, string memory cidFile) public
     {
-       require(!listCertFile[hashFile].exist, "Documento già presente");       
+       require(!listCertFile[hashFile].exist, "Documento gia presente");       
     
         listCertFile[hashFile].exist=true;
         listCertFile[hashFile].cid=cidFile;
