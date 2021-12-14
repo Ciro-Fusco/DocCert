@@ -89,7 +89,6 @@ App = {
   //VERIFICA DOCUMENTO
   handleVerDoc: async function(event) {
  
-
     var hash = await calcolaHashFile()
 
     var docCertInstance;
